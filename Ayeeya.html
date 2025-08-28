@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aye eyA</title>
+  <style>
+
+    @font-face {
+  font-family: 'Angilla Tattoo';
+  src: url('fonts/AngillaTattoo.ttf') format('truetype');
+}
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { height: 100%; font-family: Arial, sans-serif; background: #111; color: #fff; }
+    p { color: rgb(245, 239, 239);}
+
+    h1 {
+  font-family: 'Angilla Tattoo';
+  src: url('fonts/AngillaTattoo.ttf') format('truetype');
+  color: red;
+  font-family: 'Angilla Tattoo', cursive;
+  font-size: 7rem;
+  letter-spacing: 0.05em;
+}
+h2 { 
+  font-family: 'Vandalism', sans-serif;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+    /* HERO */
+    .hero {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+    .hero video {
+      position: absolute;
+      top: 50%; left: 50%;
+      min-width: 100%; min-height: 100%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      z-index: -1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+      background: rgba(0,0,0,0.4);
+    }
+    .hero-content h1 { font-size: 3rem; margin-bottom: 1rem; }
+
+    /* Audio Player */
+    #audio-player-wrapper { 
+      text-align: center; 
+      margin: 30px auto; 
+    }
+    #now-playing-title { margin-top: 10px; font-weight: bold; }
+
+    /* Playlist Grid */
+    .playlist-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+    .playlist-column ul { list-style: none; }
+    .track {
+      cursor: pointer;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      background: #f16c6c;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    .track:hover { background: #333; }
+    .track video {
+      width: 60px; height: 40px; 
+      margin-right: 10px; 
+      object-fit: cover; 
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #1d0101;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <video autoplay muted loop playsinline>
+      <source src="3moons.mp4" type="video/mp4">
+    </video>
+    <div class="hero-content">
+      <h1>Aye eyA</h1>
+     
+
+  <!-- Audio Player -->
+  <div id="audio-player-wrapper">
+    <audio id="audio-player" controls>
+      <source id="audio-source" src="" type="audio/mpeg">
+    </audio>
+    <div id="now-playing-title">Click on a chapter</div>
+  </div>
+
+  <!-- Playlist -->
+  <section class="playlist-grid">
+    <div class="playlist-column">
+      <ul>
+        <li class="track" data-src="Couldabintiprison.mp3" data-title="Could bin ta prisin">
+        
+          <span><h2>Coulda bin ta prisin</h2></span>
+        </li>
+        <li class="track" data-src="Pigzbewhere.mp3" data-title="Pigz Be where">
+       
+          <span><h2>Pigz be where</h2></span>
+        </li>
+        <!-- add more tracks... -->
+      </ul>
+    </div>
+
+    <div class="playlist-column">
+      <ul>
+        <li class="track" data-src="Bugattinbitches.mp3" data-title="Bugatti n bitches">
+      
+
+          <span><h2>Bugatti n bitches </h2></span>
+        <li class="track" data-src="DontrustColombians.mp3" data-title="Colombian Connection">
+          <video autoplay muted loop>
+            <source src="ayeeya.mp4" type="video/mp4">
+          </video>
+          <span><h2>Colombian Conexion</h2></span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2025 Koala Spies Sydney <br>koalaspies@duck.com</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const audioPlayer = document.getElementById('audio-player');
+      const audioSource = document.getElementById('audio-source');
+      const nowPlayingTitle = document.getElementById('now-playing-title');
+      const tracks = document.querySelectorAll('.track');
+      let currentTrackIndex = -1;
+
+      function playTrack(index) {
+        const track = tracks[index];
+        if (!track) return;
+        audioSource.src = track.dataset.src;
+        audioPlayer.load();
+        audioPlayer.play();
+        nowPlayingTitle.textContent = `Now Playing: ${track.dataset.title}`;
+        currentTrackIndex = index;
+      }
+
+      tracks.forEach((track, index) => {
+        track.addEventListener('click', () => playTrack(index));
+      });
+
+      audioPlayer.addEventListener('ended', () => {
+        const nextIndex = currentTrackIndex + 1;
+        if (nextIndex < tracks.length) playTrack(nextIndex);
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
