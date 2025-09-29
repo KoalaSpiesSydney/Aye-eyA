@@ -5,187 +5,293 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aye eyA</title>
   <style>
-
     @font-face {
-  font-family: 'Angilla Tattoo';
-  src: url('fonts/AngillaTattoo.ttf') format('truetype');
-}
-    
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html { height: 100%; font-family: Arial, sans-serif; background: #111; color: #fff; }
-    p { color: rgb(245, 239, 239);}
-
-    h1 {
-  font-family: 'Angilla Tattoo';
-  src: url('fonts/AngillaTattoo.ttf') format('truetype');
-  color: red;
-  font-family: 'Angilla Tattoo', cursive;
-  font-size: 7rem;
-  letter-spacing: 0.05em;
-}
-h2 { 
-  font-family: 'Vandalism', sans-serif;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  text-align: center;
-}
-
-    /* HERO */
-    .hero {
-      position: relative;
-      height: 100vh;
-      width: 100%;
-      overflow: hidden;
+      font-family: 'Angilla Tattoo';
+      src: url('fonts/AngillaTattoo.ttf') format('truetype');
     }
-    .hero video {
-      position: absolute;
-      top: 50%; left: 50%;
+
+    body, html {
+      margin: 0; padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+
+    /* Full background video */
+    #bg-video {
+      position: fixed;
+      top: 0; left: 0;
       min-width: 100%; min-height: 100%;
-      transform: translate(-50%, -50%);
-      object-fit: cover;
+      width: auto; height: auto;
       z-index: -1;
+      object-fit: cover;
+      opacity: 80%;
     }
-    .hero-content {
+
+    /* Overlay content */
+    .site-content {
       position: relative;
       z-index: 1;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: rgba(0,0,0,0.5);
+      min-height: 100vh;
       text-align: center;
-      flex-direction: column;
-      background: rgba(0,0,0,0.4);
+      padding: 40px 20px;
     }
-    .hero-content h1 { font-size: 3rem; margin-bottom: 1rem; }
 
-    /* Audio Player */
-    #audio-player-wrapper { 
-      text-align: center; 
-      margin: 30px auto; 
+    /* Title wrapper for heading + canvas */
+    .title-wrapper {
+      position: relative;
+      display: inline-block; /* shrink-wrap around h1 */
+      margin-bottom: 8%;
     }
-    #now-playing-title { margin-top: 10px; font-weight: bold; }
 
-    /* Playlist Grid */
-    .playlist-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      padding: 20px;
+    #electric-visual {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0; /* behind heading */
+    
     }
-    .playlist-column ul { list-style: none; }
+
+    .title-wrapper h1 {
+      position: relative;
+      z-index: 1; /* above canvas */
+      font-family: 'Angilla Tattoo', cursive;
+      color: #efebeb;
+      opacity: 90%;
+      font-size: 3.6rem;
+      margin: 5px;
+      margin-top: 5px;
+      padding: 5px
+      
+      
+    }
+
+  .playlist-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 10px;
+  max-width: 500px;
+  margin-top: auto;   /* pushes playlist to bottom third */
+  margin-bottom: 20px; /* add space above footer */
+  width: 100%;
+  opacity: 50%;
+}
+
+    
+    .playlist-column ul { list-style: none; padding: 0; margin: 0; }
+
     .track {
       cursor: pointer;
       margin: 10px 0;
       display: flex;
       align-items: center;
-      padding: 8px;
+      justify-content: center;
+      padding: 16px;
       background: #f16c6c;
       border-radius: 6px;
       transition: 0.3s;
     }
     .track:hover { background: #333; }
-    .track video {
-      width: 60px; height: 40px; 
-      margin-right: 10px; 
-      object-fit: cover; 
-      border-radius: 4px;
+    .track.playing { background: #ff0000; }
+
+    .track h2 {
+      font-size: 1rem;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+
     }
+    .site-content {
+  position: relative;
+  z-index: 1;
+  background: rgba(0,0,0,0.5);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
 
     /* Footer */
     .site-footer {
-      background: #1d0101;
+      background: rgba(29,1,1,0.7);
       text-align: center;
-      padding: 15px;
-      margin-top: 30px;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #aaa;
     }
+    
   </style>
 </head>
 <body>
 
-  <!-- HERO -->
-  <section class="hero">
-    <video autoplay muted loop playsinline>
-      <source src="3moons.mp4" type="video/mp4">
-    </video>
-    <div class="hero-content">
-      <h1>Aye eyA</h1>
-     
+  <!-- Full background video -->
+  <video id="bg-video" autoplay muted loop playsinline>
+    <source src="ayeeya.mp4" type="video/mp4">
+  </video>
 
-  <!-- Audio Player -->
-  <div id="audio-player-wrapper">
-    <audio id="audio-player" controls>
-      <source id="audio-source" src="" type="audio/mpeg">
-    </audio>
-    <div id="now-playing-title">Click on a chapter</div>
+  <!-- Content -->
+  <div class="site-content">
+
+    <!-- Title with waves behind -->
+    <div class="title-wrapper">
+      <canvas id="electric-visual"></canvas>
+      <h1>Aye eyA</h1>
+    </div>
+
+
+
+    <section class="playlist-grid">
+  <div class="playlist-column">
+    <ul>
+      <li class="track" data-src="Couldabintiprison.mp3"><h2>Coulda Bin Ta Prisin</h2></li>
+      <li class="track" data-src="Pigzbewhere.mp3"><h2>Pigz Be Where</h2></li>
+    </ul>
+  </div>
+  <div class="playlist-column">
+    <ul>
+      <li class="track" data-src="Bugattinbitches.mp3"><h2>Bugatti n Bitches</h2></li>
+      <li class="track" data-src="DontrustColombians.mp3"><h2>Colombian Conexion</h2></li>
+    </ul>
+  </div>
+</section>
+
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <p>&copy; 2025 Koala Spies Sydney <br>koalaspies@duck.com</p>
+    </footer>
   </div>
 
-  <!-- Playlist -->
-  <section class="playlist-grid">
-    <div class="playlist-column">
-      <ul>
-        <li class="track" data-src="Couldabintiprison.mp3" data-title="Could bin ta prisin">
-        
-          <span><h2>Coulda bin ta prisin</h2></span>
-        </li>
-        <li class="track" data-src="Pigzbewhere.mp3" data-title="Pigz Be where">
-       
-          <span><h2>Pigz be where</h2></span>
-        </li>
-        <!-- add more tracks... -->
-      </ul>
-    </div>
-
-    <div class="playlist-column">
-      <ul>
-        <li class="track" data-src="Bugattinbitches.mp3" data-title="Bugatti n bitches">
-      
-
-          <span><h2>Bugatti n bitches </h2></span>
-        <li class="track" data-src="DontrustColombians.mp3" data-title="Colombian Connection">
-          <video autoplay muted loop>
-            <source src="ayeeya.mp4" type="video/mp4">
-          </video>
-          <span><h2>Colombian Conexion</h2></span>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <p>&copy; 2025 Koala Spies Sydney <br>koalaspies@duck.com</p>
-  </footer>
-
+  <!-- Scripts -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const audioPlayer = document.getElementById('audio-player');
-      const audioSource = document.getElementById('audio-source');
-      const nowPlayingTitle = document.getElementById('now-playing-title');
-      const tracks = document.querySelectorAll('.track');
-      let currentTrackIndex = -1;
+  document.addEventListener('DOMContentLoaded', function () {
+    const audioPlayer = new Audio(); // hidden audio element
+    const tracks = document.querySelectorAll('.track');
+    const canvas = document.getElementById('electric-visual');
+    const ctx = canvas.getContext('2d');
 
-      function playTrack(index) {
-        const track = tracks[index];
-        if (!track) return;
-        audioSource.src = track.dataset.src;
-        audioPlayer.load();
-        audioPlayer.play();
-        nowPlayingTitle.textContent = `Now Playing: ${track.dataset.title}`;
-        currentTrackIndex = index;
+    let currentTrackIndex = -1;
+    let isPlaying = false;
+    let time = 0;
+
+    // glitch variables
+    let lastGlitch = 0;
+    const glitchInterval = 4000; // every 4s
+    let glitchBoost = 0;
+
+    // Resize canvas to match title wrapper
+    function resizeCanvas() {
+      const wrapper = document.querySelector('.title-wrapper');
+      canvas.width = wrapper.offsetWidth;
+      canvas.height = wrapper.offsetHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Visualizer functions
+    function drawStillLines() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawStraightLine('red', canvas.height / 3);
+      drawStraightLine('red', (canvas.height / 3) * 2);
+    }
+
+    function drawStraightLine(color, y) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.strokeStyle = "rgba(255,0,0,0.9)";
+      ctx.lineWidth = 2;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 12;
+      ctx.stroke();
+    }
+
+    function drawWave(color, offset, yOffset, frequency, amplitude) {
+      ctx.beginPath();
+      ctx.moveTo(0, yOffset);
+
+      for (let x = 0; x <= canvas.width; x += 6) {
+        const glitch = (Math.random() - 0.5) * 6;
+        const y =
+          yOffset +
+          Math.sin((x / frequency) - time + offset) * amplitude +
+          glitch +
+          glitchBoost;
+        ctx.lineTo(x, y);
       }
 
-      tracks.forEach((track, index) => {
-        track.addEventListener('click', () => playTrack(index));
-      });
+      ctx.strokeStyle = "rgba(255,0,0,0.9)";
+      ctx.lineWidth = 2;
+      ctx.shadowColor = "red";
+      ctx.shadowBlur = 20;
+      ctx.stroke();
+    }
 
-      audioPlayer.addEventListener('ended', () => {
-        const nextIndex = currentTrackIndex + 1;
-        if (nextIndex < tracks.length) playTrack(nextIndex);
-      });
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const now = performance.now();
+      if (isPlaying && now - lastGlitch > glitchInterval) {
+        glitchBoost = (Math.random() - 0.5) * 40;
+        lastGlitch = now;
+        setTimeout(() => { glitchBoost = 0; }, 200);
+      }
+
+      if (isPlaying) {
+        drawWave('red', 0, canvas.height / 4, 35, 15);
+        drawWave('blue', 2, canvas.height / 2, 50, 20);
+        drawWave('red', 4, (canvas.height / 4) * 3, 70, 25);
+        time += 0.15; // speed
+      } else {
+        drawStillLines();
+      }
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Playlist play/pause per track
+    function playTrack(index) {
+      const track = tracks[index];
+
+      // If same track clicked and already playing → pause
+      if (currentTrackIndex === index && !audioPlayer.paused) {
+        audioPlayer.pause();
+        isPlaying = false;
+        track.classList.remove('playing');
+        return;
+      }
+
+      // Otherwise play new track
+      tracks.forEach(t => t.classList.remove('playing'));
+      audioPlayer.src = track.dataset.src;
+      audioPlayer.play();
+      isPlaying = true;
+      currentTrackIndex = index;
+      track.classList.add('playing');
+    }
+
+    tracks.forEach((track, i) => {
+      track.addEventListener('click', () => playTrack(i));
     });
-  </script>
 
+    audioPlayer.addEventListener('ended', () => {
+      if (currentTrackIndex >= 0) {
+        tracks[currentTrackIndex].classList.remove('playing');
+      }
+      isPlaying = false;
+    });
+  });
+  </script>
 </body>
 </html>
+
+
+
 
 
