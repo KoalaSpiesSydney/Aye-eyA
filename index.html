@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aye eyA</title>
+
   <style>
     @font-face {
       font-family: 'Angilla Tattoo';
@@ -15,17 +16,18 @@
       height: 100%;
       font-family: Arial, sans-serif;
       color: #fff;
+      overflow-x: hidden;
     }
 
     /* Full background video */
     #bg-video {
       position: fixed;
       top: 0; left: 0;
-      min-width: 100%; min-height: 100%;
-      width: auto; height: auto;
-      z-index: -1;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      opacity: 80%;
+      z-index: -1;
+      opacity: 0.8;
     }
 
     /* Overlay content */
@@ -34,6 +36,9 @@
       z-index: 1;
       background: rgba(0,0,0,0.5);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
       padding: 40px 20px;
     }
@@ -41,45 +46,40 @@
     /* Title wrapper for heading + canvas */
     .title-wrapper {
       position: relative;
-      display: inline-block; /* shrink-wrap around h1 */
+      display: inline-block;
       margin-bottom: 8%;
     }
 
     #electric-visual {
       position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0; /* behind heading */
-    
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .title-wrapper h1 {
       position: relative;
-      z-index: 1; /* above canvas */
+      z-index: 1;
       font-family: 'Angilla Tattoo', cursive;
       color: #efebeb;
-      opacity: 90%;
+      opacity: 0.9;
       font-size: 3.6rem;
       margin: 5px;
-      margin-top: 5px;
-      padding: 5px
-      
-      
+      padding: 5px;
     }
 
-  .playlist-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  padding: 10px;
-  max-width: 500px;
-  margin-top: auto;   /* pushes playlist to bottom third */
-  margin-bottom: 20px; /* add space above footer */
-  width: 100%;
-  opacity: 50%;
-}
+    .playlist-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 10px;
+      max-width: 500px;
+      width: 100%;
+      margin-top: auto;      /* pushes playlist down */
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
 
-    
     .playlist-column ul { list-style: none; padding: 0; margin: 0; }
 
     .track {
@@ -101,19 +101,7 @@
       margin: 0;
       text-transform: uppercase;
       letter-spacing: 1px;
-
     }
-    .site-content {
-  position: relative;
-  z-index: 1;
-  background: rgba(0,0,0,0.5);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 20px;
-}
-
 
     /* Footer */
     .site-footer {
@@ -123,12 +111,66 @@
       margin-top: 10px;
       font-size: 0.9rem;
       color: #aaa;
+      width: 100%;
+      max-width: 700px;
+      border-radius: 10px;
     }
-    
+
+    /* ======================================
+       EMBED MODE (auto-applies in iframes)
+       ====================================== */
+    body.is-embed .site-content{
+      min-height: auto;        /* KEY: don’t force 100vh inside a square iframe */
+      padding: 14px 12px;
+    }
+
+    body.is-embed .title-wrapper{
+      margin-bottom: 10px;     /* was 8% */
+    }
+
+    body.is-embed .title-wrapper h1{
+      font-size: 2.2rem;       /* shrink title */
+      margin: 2px;
+      padding: 2px;
+    }
+
+    body.is-embed .playlist-grid{
+      max-width: 380px;
+      gap: 10px;
+      padding: 6px;
+      margin-top: 6px;         /* stop “push to bottom” inside embed */
+      margin-bottom: 10px;
+      opacity: 0.7;            /* slightly clearer in preview */
+    }
+
+    body.is-embed .track{
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 8px;
+    }
+
+    body.is-embed .track h2{
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    body.is-embed .site-footer{
+      margin-top: 8px;
+      padding: 8px;
+      font-size: 0.85rem;
+    }
+
+    /* Optional: if your iframe preview is very small */
+    @media (max-width: 520px){
+      body.is-embed .playlist-grid{
+        grid-template-columns: 1fr; /* stack tracks */
+        max-width: 360px;
+      }
+    }
   </style>
 </head>
-<body>
 
+<body>
   <!-- Full background video -->
   <video id="bg-video" autoplay muted loop playsinline>
     <source src="ayeeya2.mp4" type="video/mp4">
@@ -136,30 +178,27 @@
 
   <!-- Content -->
   <div class="site-content">
-
     <!-- Title with waves behind -->
     <div class="title-wrapper">
       <canvas id="electric-visual"></canvas>
       <h1>Aye eyA</h1>
     </div>
 
-
-
     <section class="playlist-grid">
-  <div class="playlist-column">
-    <ul>
-      <li class="track" data-src="Couldabintiprison.mp3"><h2>Coulda Bin Ta Prisin</h2></li>
-      <li class="track" data-src="Pigzbewhere.mp3"><h2>Pigz Be Where</h2></li>
-    </ul>
-  </div>
-  <div class="playlist-column">
-    <ul>
-      <li class="track" data-src="Bugattinbitches.mp3"><h2>Bugatti n Bitches</h2></li>
-      <li class="track" data-src="DontrustColombians.mp3"><h2>Colombian Conexion</h2></li>
-    </ul>
-  </div>
-</section>
+      <div class="playlist-column">
+        <ul>
+          <li class="track" data-src="Couldabintiprison.mp3"><h2>Coulda Bin Ta Prisin</h2></li>
+          <li class="track" data-src="Pigzbewhere.mp3"><h2>Pigz Be Where</h2></li>
+        </ul>
+      </div>
 
+      <div class="playlist-column">
+        <ul>
+          <li class="track" data-src="Bugattinbitches.mp3"><h2>Bugatti n Bitches</h2></li>
+          <li class="track" data-src="DontrustColombians.mp3"><h2>Colombian Conexion</h2></li>
+        </ul>
+      </div>
+    </section>
 
     <!-- Footer -->
     <footer class="site-footer">
@@ -169,127 +208,133 @@
 
   <!-- Scripts -->
   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const audioPlayer = new Audio(); // hidden audio element
-    const tracks = document.querySelectorAll('.track');
-    const canvas = document.getElementById('electric-visual');
-    const ctx = canvas.getContext('2d');
-
-    let currentTrackIndex = -1;
-    let isPlaying = false;
-    let time = 0;
-
-    // glitch variables
-    let lastGlitch = 0;
-    const glitchInterval = 4000; // every 4s
-    let glitchBoost = 0;
-
-    // Resize canvas to match title wrapper
-    function resizeCanvas() {
-      const wrapper = document.querySelector('.title-wrapper');
-      canvas.width = wrapper.offsetWidth;
-      canvas.height = wrapper.offsetHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    // Visualizer functions
-    function drawStillLines() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawStraightLine('red', canvas.height / 3);
-      drawStraightLine('red', (canvas.height / 3) * 2);
+    // ✅ Auto-enable compact layout when embedded in an iframe
+    if (window.self !== window.top) {
+      document.body.classList.add('is-embed');
     }
 
-    function drawStraightLine(color, y) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(canvas.width, y);
-      ctx.strokeStyle = "rgba(255,0,0,0.9)";
-      ctx.lineWidth = 2;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 12;
-      ctx.stroke();
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+      const audioPlayer = new Audio(); // hidden audio element
+      const tracks = document.querySelectorAll('.track');
+      const canvas = document.getElementById('electric-visual');
+      const ctx = canvas.getContext('2d');
 
-    function drawWave(color, offset, yOffset, frequency, amplitude) {
-      ctx.beginPath();
-      ctx.moveTo(0, yOffset);
+      let currentTrackIndex = -1;
+      let isPlaying = false;
+      let time = 0;
 
-      for (let x = 0; x <= canvas.width; x += 6) {
-        const glitch = (Math.random() - 0.5) * 6;
-        const y =
-          yOffset +
-          Math.sin((x / frequency) - time + offset) * amplitude +
-          glitch +
-          glitchBoost;
-        ctx.lineTo(x, y);
+      // glitch variables
+      let lastGlitch = 0;
+      const glitchInterval = 4000; // every 4s
+      let glitchBoost = 0;
+
+      // Resize canvas to match title wrapper
+      function resizeCanvas() {
+        const wrapper = document.querySelector('.title-wrapper');
+        canvas.width = wrapper.offsetWidth;
+        canvas.height = wrapper.offsetHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      // Visualizer functions
+      function drawStillLines() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawStraightLine('red', canvas.height / 3);
+        drawStraightLine('red', (canvas.height / 3) * 2);
       }
 
-      ctx.strokeStyle = "rgba(255,0,0,0.9)";
-      ctx.lineWidth = 2;
-      ctx.shadowColor = "red";
-      ctx.shadowBlur = 20;
-      ctx.stroke();
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const now = performance.now();
-      if (isPlaying && now - lastGlitch > glitchInterval) {
-        glitchBoost = (Math.random() - 0.5) * 40;
-        lastGlitch = now;
-        setTimeout(() => { glitchBoost = 0; }, 200);
+      function drawStraightLine(color, y) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.strokeStyle = "rgba(255,0,0,0.9)";
+        ctx.lineWidth = 2;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 12;
+        ctx.stroke();
       }
 
-      if (isPlaying) {
-        drawWave('red', 0, canvas.height / 4, 35, 15);
-        drawWave('blue', 2, canvas.height / 2, 50, 20);
-        drawWave('red', 4, (canvas.height / 4) * 3, 70, 25);
-        time += 0.15; // speed
-      } else {
-        drawStillLines();
+      function drawWave(color, offset, yOffset, frequency, amplitude) {
+        ctx.beginPath();
+        ctx.moveTo(0, yOffset);
+
+        for (let x = 0; x <= canvas.width; x += 6) {
+          const glitch = (Math.random() - 0.5) * 6;
+          const y =
+            yOffset +
+            Math.sin((x / frequency) - time + offset) * amplitude +
+            glitch +
+            glitchBoost;
+          ctx.lineTo(x, y);
+        }
+
+        ctx.strokeStyle = "rgba(255,0,0,0.9)";
+        ctx.lineWidth = 2;
+        ctx.shadowColor = "red";
+        ctx.shadowBlur = 20;
+        ctx.stroke();
       }
 
-      requestAnimationFrame(animate);
-    }
-    animate();
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Playlist play/pause per track
-    function playTrack(index) {
-      const track = tracks[index];
+        const now = performance.now();
+        if (isPlaying && now - lastGlitch > glitchInterval) {
+          glitchBoost = (Math.random() - 0.5) * 40;
+          lastGlitch = now;
+          setTimeout(() => { glitchBoost = 0; }, 200);
+        }
 
-      // If same track clicked and already playing → pause
-      if (currentTrackIndex === index && !audioPlayer.paused) {
-        audioPlayer.pause();
+        if (isPlaying) {
+          drawWave('red', 0, canvas.height / 4, 35, 15);
+          drawWave('blue', 2, canvas.height / 2, 50, 20);
+          drawWave('red', 4, (canvas.height / 4) * 3, 70, 25);
+          time += 0.15; // speed
+        } else {
+          drawStillLines();
+        }
+
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      // Playlist play/pause per track
+      function playTrack(index) {
+        const track = tracks[index];
+
+        // If same track clicked and already playing → pause
+        if (currentTrackIndex === index && !audioPlayer.paused) {
+          audioPlayer.pause();
+          isPlaying = false;
+          track.classList.remove('playing');
+          return;
+        }
+
+        // Otherwise play new track
+        tracks.forEach(t => t.classList.remove('playing'));
+        audioPlayer.src = track.dataset.src;
+        audioPlayer.play().catch(() => {});
+        isPlaying = true;
+        currentTrackIndex = index;
+        track.classList.add('playing');
+      }
+
+      tracks.forEach((track, i) => {
+        track.addEventListener('click', () => playTrack(i));
+      });
+
+      audioPlayer.addEventListener('ended', () => {
+        if (currentTrackIndex >= 0) {
+          tracks[currentTrackIndex].classList.remove('playing');
+        }
         isPlaying = false;
-        track.classList.remove('playing');
-        return;
-      }
-
-      // Otherwise play new track
-      tracks.forEach(t => t.classList.remove('playing'));
-      audioPlayer.src = track.dataset.src;
-      audioPlayer.play();
-      isPlaying = true;
-      currentTrackIndex = index;
-      track.classList.add('playing');
-    }
-
-    tracks.forEach((track, i) => {
-      track.addEventListener('click', () => playTrack(i));
+      });
     });
-
-    audioPlayer.addEventListener('ended', () => {
-      if (currentTrackIndex >= 0) {
-        tracks[currentTrackIndex].classList.remove('playing');
-      }
-      isPlaying = false;
-    });
-  });
   </script>
 </body>
 </html>
+
 
 
 
