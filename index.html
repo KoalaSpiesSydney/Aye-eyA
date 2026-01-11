@@ -11,15 +11,16 @@
       src: url('fonts/AngillaTattoo.ttf') format('truetype');
     }
 
-    body, html {
-      margin: 0; padding: 0;
-      height: 100%;
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: auto; /* iframe-safe */
       font-family: Arial, sans-serif;
       color: #fff;
       overflow-x: hidden;
     }
 
-    /* Full background video */
+    /* Background video */
     #bg-video {
       position: fixed;
       top: 0; left: 0;
@@ -30,7 +31,7 @@
       opacity: 0.8;
     }
 
-    /* Overlay content */
+    /* Main container */
     .site-content {
       position: relative;
       z-index: 1;
@@ -43,7 +44,7 @@
       padding: 40px 20px;
     }
 
-    /* Title wrapper for heading + canvas */
+    /* Title + canvas */
     .title-wrapper {
       position: relative;
       display: inline-block;
@@ -68,19 +69,24 @@
       padding: 5px;
     }
 
+    /* Two-column playlist */
     .playlist-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
       padding: 10px;
-      max-width: 500px;
       width: 100%;
-      margin-top: auto;      /* pushes playlist down */
+      max-width: 420px; /* ensures two columns fit on all phones */
+      margin-top: auto;
       margin-bottom: 20px;
       opacity: 0.5;
     }
 
-    .playlist-column ul { list-style: none; padding: 0; margin: 0; }
+    .playlist-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
     .track {
       cursor: pointer;
@@ -89,10 +95,11 @@
       align-items: center;
       justify-content: center;
       padding: 16px;
-      background: #f16c6c;
+      background: #fa0404;
       border-radius: 6px;
       transition: 0.3s;
     }
+
     .track:hover { background: #333; }
     .track.playing { background: #ff0000; }
 
@@ -103,82 +110,37 @@
       letter-spacing: 1px;
     }
 
-    /* Footer */
+    /* Dark-mode footer */
     .site-footer {
-      background: rgba(29,1,1,0.7);
+      background: rgba(0, 0, 0, 0.45);
       text-align: center;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 0.9rem;
-      color: #aaa;
+      padding: 6px 10px;
+      margin-top: 50px;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.55);
       width: 100%;
       max-width: 700px;
       border-radius: 10px;
+      backdrop-filter: blur(4px);
     }
 
-    /* ======================================
-       EMBED MODE (auto-applies in iframes)
-       ====================================== */
-    body.is-embed .site-content{
-      min-height: auto;        /* KEY: don’t force 100vh inside a square iframe */
-      padding: 14px 12px;
-    }
-
-    body.is-embed .title-wrapper{
-      margin-bottom: 10px;     /* was 8% */
-    }
-
-    body.is-embed .title-wrapper h1{
-      font-size: 2.2rem;       /* shrink title */
-      margin: 2px;
-      padding: 2px;
-    }
-
-    body.is-embed .playlist-grid{
-      max-width: 380px;
-      gap: 10px;
-      padding: 6px;
-      margin-top: 6px;         /* stop “push to bottom” inside embed */
-      margin-bottom: 10px;
-      opacity: 0.7;            /* slightly clearer in preview */
-    }
-
-    body.is-embed .track{
-      padding: 10px;
-      margin: 6px 0;
-      border-radius: 8px;
-    }
-
-    body.is-embed .track h2{
-      font-size: 0.95rem;
-      letter-spacing: 0.5px;
-    }
-
-    body.is-embed .site-footer{
-      margin-top: 8px;
-      padding: 8px;
-      font-size: 0.85rem;
-    }
-
-    /* Optional: if your iframe preview is very small */
-    @media (max-width: 520px){
-      body.is-embed .playlist-grid{
-        grid-template-columns: 1fr; /* stack tracks */
-        max-width: 360px;
+    /* Mobile adjustments */
+    @media (max-width: 480px) {
+      .title-wrapper h1 {
+        font-size: 2.4rem;
       }
     }
   </style>
 </head>
 
 <body>
-  <!-- Full background video -->
+
   <video id="bg-video" autoplay muted loop playsinline>
     <source src="ayeeya2.mp4" type="video/mp4">
   </video>
 
-  <!-- Content -->
   <div class="site-content">
-    <!-- Title with waves behind -->
+
     <div class="title-wrapper">
       <canvas id="electric-visual"></canvas>
       <h1>Aye eyA</h1>
@@ -200,21 +162,15 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="site-footer">
       <p>&copy; 2025 Koala Spies Sydney <br>koalaspies@duck.com</p>
     </footer>
+
   </div>
 
-  <!-- Scripts -->
   <script>
-    // ✅ Auto-enable compact layout when embedded in an iframe
-    if (window.self !== window.top) {
-      document.body.classList.add('is-embed');
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-      const audioPlayer = new Audio(); // hidden audio element
+      const audioPlayer = new Audio();
       const tracks = document.querySelectorAll('.track');
       const canvas = document.getElementById('electric-visual');
       const ctx = canvas.getContext('2d');
@@ -223,12 +179,10 @@
       let isPlaying = false;
       let time = 0;
 
-      // glitch variables
       let lastGlitch = 0;
-      const glitchInterval = 4000; // every 4s
+      const glitchInterval = 4000;
       let glitchBoost = 0;
 
-      // Resize canvas to match title wrapper
       function resizeCanvas() {
         const wrapper = document.querySelector('.title-wrapper');
         canvas.width = wrapper.offsetWidth;
@@ -237,25 +191,24 @@
       window.addEventListener('resize', resizeCanvas);
       resizeCanvas();
 
-      // Visualizer functions
       function drawStillLines() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawStraightLine('red', canvas.height / 3);
-        drawStraightLine('red', (canvas.height / 3) * 2);
+        drawStraightLine(canvas.height / 3);
+        drawStraightLine((canvas.height / 3) * 2);
       }
 
-      function drawStraightLine(color, y) {
+      function drawStraightLine(y) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(canvas.width, y);
         ctx.strokeStyle = "rgba(255,0,0,0.9)";
         ctx.lineWidth = 2;
-        ctx.shadowColor = color;
+        ctx.shadowColor = "red";
         ctx.shadowBlur = 12;
         ctx.stroke();
       }
 
-      function drawWave(color, offset, yOffset, frequency, amplitude) {
+      function drawWave(offset, yOffset, frequency, amplitude) {
         ctx.beginPath();
         ctx.moveTo(0, yOffset);
 
@@ -287,10 +240,10 @@
         }
 
         if (isPlaying) {
-          drawWave('red', 0, canvas.height / 4, 35, 15);
-          drawWave('blue', 2, canvas.height / 2, 50, 20);
-          drawWave('red', 4, (canvas.height / 4) * 3, 70, 25);
-          time += 0.15; // speed
+          drawWave(0, canvas.height / 4, 35, 15);
+          drawWave(2, canvas.height / 2, 50, 20);
+          drawWave(4, (canvas.height / 4) * 3, 70, 25);
+          time += 0.15;
         } else {
           drawStillLines();
         }
@@ -299,11 +252,9 @@
       }
       animate();
 
-      // Playlist play/pause per track
       function playTrack(index) {
         const track = tracks[index];
 
-        // If same track clicked and already playing → pause
         if (currentTrackIndex === index && !audioPlayer.paused) {
           audioPlayer.pause();
           isPlaying = false;
@@ -311,10 +262,9 @@
           return;
         }
 
-        // Otherwise play new track
         tracks.forEach(t => t.classList.remove('playing'));
         audioPlayer.src = track.dataset.src;
-        audioPlayer.play().catch(() => {});
+        audioPlayer.play();
         isPlaying = true;
         currentTrackIndex = index;
         track.classList.add('playing');
@@ -332,10 +282,9 @@
       });
     });
   </script>
+
 </body>
 </html>
-
-
 
 
 
