@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
+
   <title>Aye eyA</title>
 
   <style>
@@ -10,6 +13,13 @@
       font-family: 'Angilla Tattoo';
       src: url('fonts/AngillaTattoo.ttf') format('truetype');
     }
+
+
+.track h2 {
+  font-family: "Black Ops One", sans-serif;
+}
+
+
 
     html, body {
       margin: 0;
@@ -58,16 +68,20 @@
       pointer-events: none;
     }
 
-    .title-wrapper h1 {
-      position: relative;
-      z-index: 1;
-      font-family: 'Angilla Tattoo', cursive;
-      color: #efebeb;
-      opacity: 0.9;
-      font-size: 3.6rem;
-      margin: 5px;
-      padding: 5px;
-    }
+   .title-wrapper h1 {
+  position: relative;
+  z-index: 1;
+  font-family: "Sedgwick Ave", system-ui, sans-serif;
+  color: #efebeb;
+  opacity: 0.9;
+  font-size: 5.6rem;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 5px;
+  padding: 5px;
+}
+
+
 
     /* Two-column playlist */
     .playlist-grid {
@@ -104,7 +118,7 @@
     .track.playing { background: #ff0000; }
 
     .track h2 {
-      font-size: 1rem;
+      font-size: 1.5rem;
       margin: 0;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -143,6 +157,7 @@
 
     <div class="title-wrapper">
       <canvas id="electric-visual"></canvas>
+      
       <h1>Aye eyA</h1>
     </div>
 
@@ -285,7 +300,6 @@
 
 </body>
 </html>
-
 
 
 
